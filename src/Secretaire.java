@@ -146,7 +146,7 @@ public class Secretaire extends javax.swing.JFrame {
 
     private void jbtnPatientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPatientsActionPerformed
         // TODO add your handling code here:
-        new GestionPatients().setVisible(true);
+        new GestionDesPatients().setVisible(true);
     }//GEN-LAST:event_jbtnPatientsActionPerformed
 
     private void jbtnRdvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRdvActionPerformed
