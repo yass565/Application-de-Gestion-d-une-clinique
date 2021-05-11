@@ -5,6 +5,29 @@
  */
 package gestion.de.clinique;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.HeadlessException;
+import java.awt.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+ import java.awt. print.*;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JPanel;
+import javax.swing.JTable;
 /**
  *
  * @author hp
@@ -14,8 +37,17 @@ public class Facture extends javax.swing.JFrame {
     /**
      * Creates new form Facture
      */
+    DefaultTableModel model = new DefaultTableModel();
     public Facture() {
         initComponents();
+        model.addColumn("Code Prestation");
+        model.addColumn("Designation");
+        model.addColumn("Quantité");
+        model.addColumn("Prix unitaire");
+        
+        afficher();
+      
+        
     }
 
     /**
@@ -28,226 +60,616 @@ public class Facture extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        jPanel13 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtabFacturation = new javax.swing.JTable();
         jLabel12 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField24 = new javax.swing.JTextField();
-        jLabel19 = new javax.swing.JLabel();
+        jbtnImprimer = new javax.swing.JButton();
+        jbtnAjouter = new javax.swing.JButton();
+        jbtnSupprimer = new javax.swing.JButton();
+        toolBar = new javax.swing.JToolBar();
+        tbtnFacture = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jcomboPrestation = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jtfQte = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
+        jtfPU = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jtfIdPrestation = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jxdpFacture = new org.jdesktop.swingx.JXDatePicker();
+        jlblNFacture = new javax.swing.JLabel();
+        jtfId = new javax.swing.JTextField();
+        jlblIdP = new javax.swing.JLabel();
+        jtfIdP = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtabFacture = new javax.swing.JTable();
+        jLabel19 = new javax.swing.JLabel();
+        jtfPrixTotal = new javax.swing.JTextField();
+
+        jtabFacturation.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "service", "prix"
+            }
+        ));
+        jScrollPane2.setViewportView(jtabFacturation);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
-
-        jLabel1.setText("Numero Medecin");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(19, 135, 79, 14);
-
-        jLabel3.setText("Numero Patient");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(19, 100, 74, 14);
-
-        jLabel4.setText("Nom Patient");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(19, 181, 58, 14);
-
-        jLabel5.setText("¨Prenom Patient");
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(10, 216, 79, 14);
-
-        jLabel6.setText("Adresse Patient");
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(13, 265, 76, 14);
-
-        jLabel7.setText("Ville Patient");
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(19, 303, 55, 14);
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(128, 101, 112, 20);
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(128, 132, 112, 20);
-        getContentPane().add(jTextField4);
-        jTextField4.setBounds(128, 175, 112, 20);
-        getContentPane().add(jTextField5);
-        jTextField5.setBounds(128, 213, 112, 20);
-        getContentPane().add(jTextField6);
-        jTextField6.setBounds(128, 262, 112, 20);
-        getContentPane().add(jTextField7);
-        jTextField7.setBounds(128, 300, 112, 20);
-
-        jLabel11.setText("Facture N°");
-        getContentPane().add(jLabel11);
-        jLabel11.setBounds(142, 65, 52, 14);
-        getContentPane().add(jTextField11);
-        jTextField11.setBounds(246, 62, 130, 20);
+        setTitle("Facture");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(0, 51, 255));
         jLabel12.setText("Facture");
-        getContentPane().add(jLabel12);
-        jLabel12.setBounds(270, 22, 114, 29);
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 70, 114, -1));
 
-        jLabel17.setText("Service");
-        getContentPane().add(jLabel17);
-        jLabel17.setBounds(307, 135, 35, 14);
+        jLabel17.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel17.setText("Prestation");
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 60, -1));
 
-        jTextField24.addActionListener(new java.awt.event.ActionListener() {
+        jbtnImprimer.setBackground(new java.awt.Color(51, 204, 255));
+        jbtnImprimer.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnImprimer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/imprimer.png"))); // NOI18N
+        jbtnImprimer.setText("Imprimer");
+        jbtnImprimer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField24ActionPerformed(evt);
+                jbtnImprimerActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField24);
-        jTextField24.setBounds(250, 360, 243, 20);
+        getContentPane().add(jbtnImprimer, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 250, 130, 40));
 
-        jLabel19.setText("Prix Total");
-        getContentPane().add(jLabel19);
-        jLabel19.setBounds(160, 360, 45, 14);
+        jbtnAjouter.setBackground(new java.awt.Color(51, 204, 255));
+        jbtnAjouter.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnAjouter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/ajouter-icône.jpg"))); // NOI18N
+        jbtnAjouter.setText("Ajouter à la facture");
+        jbtnAjouter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnAjouterActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbtnAjouter, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 250, 190, 40));
 
-        jButton1.setText("Fermer");
+        jbtnSupprimer.setBackground(new java.awt.Color(51, 204, 255));
+        jbtnSupprimer.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnSupprimer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/supprimer.png"))); // NOI18N
+        jbtnSupprimer.setText("Supprimer");
+        jbtnSupprimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnSupprimerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbtnSupprimer, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 250, 130, 40));
+
+        toolBar.setRollover(true);
+        toolBar.setName("Rendez-vous"); // NOI18N
+
+        tbtnFacture.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tbtnFacture.setForeground(new java.awt.Color(51, 51, 0));
+        tbtnFacture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/facture.png"))); // NOI18N
+        tbtnFacture.setText("Paiement");
+        tbtnFacture.setFocusable(false);
+        tbtnFacture.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tbtnFacture.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        tbtnFacture.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbtnFactureActionPerformed(evt);
+            }
+        });
+        toolBar.add(tbtnFacture);
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButton1.setText("Service");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(444, 309, 67, 23);
+        toolBar.add(jButton1);
 
-        jButton2.setText("Imprimer");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        getContentPane().add(toolBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, 60));
+
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT nomService FROM service;";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                jcomboPrestation.addItem(rs.getString("nomService"));
+            }
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        jcomboPrestation.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jcomboPrestationFocusLost(evt);
             }
         });
-        getContentPane().add(jButton2);
-        jButton2.setBounds(304, 300, 75, 23);
+        getContentPane().add(jcomboPrestation, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 120, -1));
 
-        jCheckBox1.setText("Consultation");
-        getContentPane().add(jCheckBox1);
-        jCheckBox1.setBounds(373, 100, 85, 23);
+        jLabel1.setText("Quantité");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, -1, -1));
+        getContentPane().add(jtfQte, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 140, 120, -1));
 
-        jCheckBox2.setText("Examen Medicale");
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+        jLabel2.setText("Prix Unitaire");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 180, -1, -1));
+
+        jtfPU.setEnabled(false);
+        getContentPane().add(jtfPU, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 180, 120, -1));
+
+        jLabel3.setText("code Prestation");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, -1, -1));
+
+        jtfIdPrestation.setEnabled(false);
+        getContentPane().add(jtfIdPrestation, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 120, -1));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel4.setText("Date");
+
+        jlblNFacture.setText("Facture N°");
+
+        jtfId.setToolTipText("Veuiller saisir le n° facture");
+        jtfId.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfId.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtfIdFocusLost(evt);
             }
         });
-        getContentPane().add(jCheckBox2);
-        jCheckBox2.setBounds(373, 131, 107, 23);
 
-        jCheckBox3.setText("Chirurgie");
-        getContentPane().add(jCheckBox3);
-        jCheckBox3.setBounds(373, 159, 69, 23);
+        jlblIdP.setBackground(new java.awt.Color(255, 102, 0));
+        jlblIdP.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jlblIdP.setText("Identifiant Patient");
 
-        jButton4.setText("Ajouter");
-        getContentPane().add(jButton4);
-        jButton4.setBounds(278, 268, 69, 23);
-
-        jButton5.setText("Modifier");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jtfIdP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jtfIdPActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5);
-        jButton5.setBounds(394, 268, 71, 23);
 
-        jButton6.setText("Supprimer");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton6);
-        jButton6.setBounds(510, 268, 81, 23);
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtabFacture.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "N° Facture", "Nom", "Prenom", "Prix"
+                "Code Prestation", "Designation", "Quantité", "Prix Unitaire"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jtabFacture.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtabFactureMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jtabFacture);
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(0, 390, 635, 184);
+        jLabel19.setText("Prix Total");
 
-        jLabel2.setText("Rechercher");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(324, 216, 55, 14);
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(425, 213, 127, 20);
+        jtfPrixTotal.setEditable(false);
+        jtfPrixTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfPrixTotalActionPerformed(evt);
+            }
+        });
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/Images/caisse.jpg"))); // NOI18N
-        jLabel8.setText("jLabel8");
-        getContentPane().add(jLabel8);
-        jLabel8.setBounds(0, 0, 640, 340);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(98, 98, 98)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel4)
+                        .addGap(32, 32, 32)
+                        .addComponent(jxdpFacture, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
+                        .addComponent(jlblNFacture)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtfId, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jlblIdP)
+                        .addGap(30, 30, 30)
+                        .addComponent(jtfIdP, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(254, 254, 254)
+                        .addComponent(jLabel19)
+                        .addGap(58, 58, 58)
+                        .addComponent(jtfPrixTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jxdpFacture, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlblNFacture)
+                            .addComponent(jtfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlblIdP)
+                            .addComponent(jtfIdP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfPrixTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
+                .addGap(19, 19, 19))
+        );
+
+        jtfId.getAccessibleContext().setAccessibleDescription("");
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 720, 320));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void deplace(int i){
+        try{
+            jtfIdPrestation.setText(model.getValueAt(i, 0).toString());
+            jcomboPrestation.setSelectedItem(model.getValueAt(i, 1).toString());
+            jtfQte.setText(model.getValueAt(i, 2).toString());
+            jtfPU.setText(model.getValueAt(i, 3).toString());
+            
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+    }
+    
+    private void afficher(){
+    try {
+        model.setRowCount(0);
+        String nFacture=jtfId.getText();
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT service.idService, nomService,qte,prixService FROM service,details_facture where service.idService=details_facture.idService and NFacture='"+nFacture+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String id = rs.getString("service.idService");
+                String nom = rs.getString("nomService");
+                String qte=rs.getString("qte");
+                String prixUnitaire=rs.getString("prixService");
+            
+                model.addRow (new Object[] {id,nom,qte,prixUnitaire});
+            }
+            jtabFacture.setModel(model);
 
-    private void jTextField24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField24ActionPerformed
+    }
+    catch (SQLException e)
+        {
+            
+        }
+
+    }
+    private void jtfIdPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfIdPActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField24ActionPerformed
+    }//GEN-LAST:event_jtfIdPActionPerformed
+
+    private void jtfPrixTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfPrixTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfPrixTotalActionPerformed
+
+    private void jbtnImprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnImprimerActionPerformed
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintable(new Printable() {
+ 
+            @Override
+            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+                if (pageIndex > 0) {
+            return NO_SUCH_PAGE;
+        }
+         
+        int marge=30;
+        int x = (int)pageFormat.getImageableX();
+        int y = (int)pageFormat.getImageableY();
+                 
+        graphics.setFont(new Font("Times new roman", Font.BOLD, 14));
+        graphics.setColor(Color.BLACK);
+        //graphics.drawString("ACTE DEMANDER\n", x + marge, y + marge);
+        jPanel1.printAll(graphics);
+//panel.print(graphics);;           
+ 
+        return PAGE_EXISTS;
+            }
+ 
+        });
+boolean doPrint = job.printDialog();
+if(doPrint) {
+    try {
+         
+        job.print();
+    }
+    catch (PrinterException e1) {
+            JOptionPane.showMessageDialog(null, e1);
+    }
+}
+        /*Details_Facture details =new Details_Facture();
+        details.setNFacture(jtfId.getText());
+        details.setDate(new SimpleDateFormat("yyyyy-mm-dd").format(jxdpFacture.getDate()));
+        Integer prix=0;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT nom, prenom FROM patient WHERE IdP='"+jtfIdP.getText()+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String nom=rs.getString("nom");
+                String prenom=rs.getString("prenom");
+                details.setNomPrenom(nom +"   "+ prenom);
+                
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        
+        DefaultTableModel model2 = new DefaultTableModel();
+        model2.addColumn("Prestation");
+        model2.addColumn("prix");
+        
+        try {
+        
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT nomService,prixService FROM facture, service, details_facture where Facture.NFacture=details_facture.NFacture and service.idService=details_facture.idService and facture.NFacture='"+jtfId.getText()+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String nom = rs.getString("nomService");
+                String prixService=rs.getString("prixService");
+                prix= prix+Integer.parseInt(prixService);
+               
+
+                model2.addRow (new Object[] {nom,prixService});
+            }
+            details.setTable(model2);
+            
+    }
+    catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog (new GestionDesPatients(), e.getMessage());
+        }
+        details.setPrixTotal(prix.toString());
+        details.setVisible(true);*/
+        
+    }//GEN-LAST:event_jbtnImprimerActionPerformed
+
+    private void jbtnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSupprimerActionPerformed
+       String supprimer;
+        String idService="";
+        String nFacture="";
+        String sup=jtfId.getText();
+        supprimer=jtfIdPrestation.getText();
+        if(supprimer.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Veuillez saisir l id de la prestation à supprimer");
+           jtfId.setText("saisisser l id ici");
+        }
+        else{
+            try
+            {
+        	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+        	Statement stmt=(Statement) conn.createStatement();
+        	String query="select NFacture,idService from details_Facture where NFacture='"+sup+"' and idService='"+supprimer+"';";
+                ResultSet rs=stmt.executeQuery(query);            
+                while(rs.next())
+                {
+                    nFacture=rs.getString("NFacture");
+                    idService=rs.getString("idService");
+                }
+                
+                if(supprimer.equals(idService) && sup.equals(nFacture));
+                {
+                    try
+                    {
+                    	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                    	Statement stmt1=(Statement)con.createStatement();   
+			String query1="delete from details_Facture where NFacture='"+supprimer+"' and idService='"+supprimer+"';";
+		        stmt1.executeUpdate(query1);
+                        JOptionPane.showMessageDialog(this,"prestation supprimée");	                                
+		    }
+                    catch(SQLException e)
+                    {
+                        JOptionPane.showMessageDialog(this,e.getMessage());
+                    }
+                }
+                
+            }
+            catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+        afficher();
+    }//GEN-LAST:event_jbtnSupprimerActionPerformed
+
+    private void tbtnFactureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnFactureActionPerformed
+        new Facture().setVisible(true);
+    }//GEN-LAST:event_tbtnFactureActionPerformed
+
+    private void jtabFactureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtabFactureMouseClicked
+        try{
+            int i=jtabFacture.getSelectedRow();
+            deplace(i);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "erreur de deplacement");
+        }
+        System.out.println(getNFacture());
+    }//GEN-LAST:event_jtabFactureMouseClicked
+
+    private void jbtnAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAjouterActionPerformed
+        String id=jtfId.getText();
+        String idP=jtfIdP.getText();
+        String codePrestation=jtfIdPrestation.getText();
+        String qte=jtfQte.getText();
+        String pu=jtfPU.getText();
+        String date= new SimpleDateFormat("yyyy-mm-dd").format(jxdpFacture.getDate());
+        int prixTotal=0;
+       
+        if(id.isEmpty()||idP.isEmpty()||date.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this,"Veuillez remplir tous les champs");
+            
+        }
+        else
+        {
+            try
+            {
+                
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                Statement stmt=(Statement)conn.createStatement(); 
+                int compt=0;
+                String req1="Select count(*) from facture,service where NFacture='"+id+"';";
+                ResultSet rs1=stmt.executeQuery(req1);
+                while(rs1.next())          
+                {
+                    compt=rs1.getInt("count(*)");
+                    if(compt==0){
+                       String query="Insert Into facture values ('"+id+"','"+idP+"','"+date+"',0);";
+                        stmt.executeUpdate(query);
+                        JOptionPane.showMessageDialog(this,"Facture enregistrée");
+                 
+                    }
+                    
+                }
+                
+                String requete="Insert Into details_facture values ('"+id+"','"+codePrestation+"','"+qte+"');";
+                stmt.executeUpdate(requete);
+                
+                String req="Select prixService,qte from details_Facture,service where service.idService=details_facture.idService and NFacture='"+id+"';";         
+                ResultSet rs=stmt.executeQuery(req);
+                while(rs.next())          
+                {
+                    pu=rs.getString("prixService");
+                    qte=rs.getString("qte");
+                    prixTotal+=(Integer.parseInt(pu)*Integer.parseInt(qte));
+                    String req2="UPDATE facture set prix='"+prixTotal+"' where NFacture='"+id+"';";
+                    stmt.executeUpdate(req2);
+                    jtfPrixTotal.setText(Integer.toString(prixTotal));
+                }
+                
+ 
+            }
+            catch( SQLException e)
+            {
+                JOptionPane.showMessageDialog(this,e.getMessage());
+            }
+            
+            
+        }
+        afficher();
+    }//GEN-LAST:event_jbtnAjouterActionPerformed
+
+    private void jtfIdFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfIdFocusLost
+        // TODO add your handling code here:
+       String idP;
+       String prix;
+       String dateFacture;
+        try
+        {                    
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt=(Statement) conn.createStatement();
+            String query="Select idP,dateFacture,prix from facture where NFacture='"+jtfId.getText()+"';";         
+            ResultSet rs=stmt.executeQuery(query);
+            while(rs.next())          
+         {
+        
+             idP=rs.getString("idP");
+             prix=rs.getString("prix");
+              dateFacture=rs.getString("dateFacture");
+             jtfIdP.setText(idP);
+            jtfPrixTotal.setText(prix);
+            jxdpFacture.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(dateFacture));
+            
+         }
+            
+        }
+            catch(SQLException e)
+        {
+           JOptionPane.showMessageDialog(this,e.getMessage());
+        } catch (ParseException ex) {
+            Logger.getLogger(Facture.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        afficher();
+    }//GEN-LAST:event_jtfIdFocusLost
+
+    private void jcomboPrestationFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jcomboPrestationFocusLost
+        // TODO add your handling code here:
+       String id="";
+       String prix="";
+        try
+        {                    
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt=(Statement) conn.createStatement();
+            String designation=jcomboPrestation.getSelectedItem().toString();
+            String query="Select idService,prixService from service where nomService='"+designation+"';";         
+            ResultSet rs=stmt.executeQuery(query);
+            while(rs.next())          
+         {
+        
+             id=rs.getString("idService");
+             prix=rs.getString("prixService");
+         }
+            jtfIdPrestation.setText(id);
+            jtfPU.setText(prix);
+        }
+            catch(SQLException e)
+        {
+           JOptionPane.showMessageDialog(this,e.getMessage());
+        }
+    }//GEN-LAST:event_jcomboPrestationFocusLost
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        new Service().setVisible(true);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
-
+    public String getNFacture(){
+        return jtfId.getText();
+    }
+    public String getDate(){
+        String date= new SimpleDateFormat("yyyyy-mm-dd").format(jxdpFacture.getDate());
+        return date;
+    }
+    public String getNomPrenom(){
+      try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT nom, prenom FROM patient WHERE IdP='"+jtfIdP.getText()+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String nom=rs.getString("nom");
+                String prenom=rs.getString("prenom");
+                return prenom + nom;
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }  
+        return null;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -274,6 +696,9 @@ public class Facture extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Facture.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -286,35 +711,35 @@ public class Facture extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField24;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton jbtnAjouter;
+    private javax.swing.JButton jbtnImprimer;
+    private javax.swing.JButton jbtnSupprimer;
+    private javax.swing.JComboBox<String> jcomboPrestation;
+    private javax.swing.JLabel jlblIdP;
+    private javax.swing.JLabel jlblNFacture;
+    private javax.swing.JTable jtabFacturation;
+    private javax.swing.JTable jtabFacture;
+    public javax.swing.JTextField jtfId;
+    private javax.swing.JTextField jtfIdP;
+    private javax.swing.JTextField jtfIdPrestation;
+    private javax.swing.JTextField jtfPU;
+    private javax.swing.JTextField jtfPrixTotal;
+    private javax.swing.JTextField jtfQte;
+    private org.jdesktop.swingx.JXDatePicker jxdpFacture;
+    private javax.swing.JButton tbtnFacture;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
+
+  
 }

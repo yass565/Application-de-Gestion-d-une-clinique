@@ -5,6 +5,14 @@
  */
 package gestion.de.clinique;
 
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author hp
@@ -41,30 +49,25 @@ public class Authentification extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Authentification");
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jcomboCategorie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Secretaire", "Medecin", "Infirmière" }));
+        jcomboCategorie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Secretaire", "Medecin", "Admin", "Caissiere" }));
         jcomboCategorie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcomboCategorieActionPerformed(evt);
             }
         });
-        getContentPane().add(jcomboCategorie);
-        jcomboCategorie.setBounds(220, 160, 120, 20);
-        getContentPane().add(jpassword);
-        jpassword.setBounds(220, 120, 120, 20);
+        getContentPane().add(jcomboCategorie, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 160, 120, -1));
+        getContentPane().add(jpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 120, 120, -1));
 
         jlblUsername.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jlblUsername.setText("Login");
-        getContentPane().add(jlblUsername);
-        jlblUsername.setBounds(80, 80, 50, 17);
+        getContentPane().add(jlblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 80, 50, -1));
 
         jlblPassword.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jlblPassword.setText("Mot de passe");
-        getContentPane().add(jlblPassword);
-        jlblPassword.setBounds(80, 120, 100, 15);
-        getContentPane().add(jtfUsername);
-        jtfUsername.setBounds(220, 80, 120, 20);
+        getContentPane().add(jlblPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 100, -1));
+        getContentPane().add(jtfUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, 120, -1));
 
         jbtnValider.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         jbtnValider.setText("Entrer");
@@ -73,8 +76,7 @@ public class Authentification extends javax.swing.JFrame {
                 jbtnValiderActionPerformed(evt);
             }
         });
-        getContentPane().add(jbtnValider);
-        jbtnValider.setBounds(60, 220, 80, 23);
+        getContentPane().add(jbtnValider, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 80, -1));
 
         jbtnAnnuler.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         jbtnAnnuler.setText("Annuler");
@@ -83,40 +85,97 @@ public class Authentification extends javax.swing.JFrame {
                 jbtnAnnulerActionPerformed(evt);
             }
         });
-        getContentPane().add(jbtnAnnuler);
-        jbtnAnnuler.setBounds(170, 220, 90, 23);
+        getContentPane().add(jbtnAnnuler, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 90, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Categorie");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(80, 170, 70, 15);
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, 70, -1));
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel2.setText("Clinique Ashila");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(20, 20, 190, 34);
+        jLabel2.setText("Clinique");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 190, 34));
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 0, 255));
         jLabel3.setText("Bienvenue");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(317, 33, 90, 21);
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(317, 33, 90, -1));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/Images/Accueil.jpg"))); // NOI18N
         jLabel5.setText("jLabel5");
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(0, 0, 440, 280);
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 280));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnValiderActionPerformed
         // TODO add your handling code here:
+        String User_id=jtfUsername.getText();
+        String password=jpassword.getText();
+        if(User_id.isEmpty()||password.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
+           jtfUsername.setText("");
+           jpassword.setText("");
+        }
+        else{
+            try{
+                Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                Statement stmt=(Statement) conn.createStatement();
+                String query="Select idM,mdp,fonction from personnels where idM='"+User_id+"';";
+                ResultSet rs = stmt.executeQuery(query);
+                if(rs.next()){
+                    String login=rs.getString("idM");
+                    String motDePasse=rs.getString("mdp");
+                    String categorie=rs.getString("fonction");
+                    if(password.equals(motDePasse)){
+                        if(jcomboCategorie.getSelectedItem().equals("Medecin") && categorie.equals("Medecin")){
+                            JOptionPane.showMessageDialog(this, "Bienvenue Docteur" );
+                            new Consultation().setVisible(true);
+                            this.setVisible(false);    
+                        }                        
+                        else if(jcomboCategorie.getSelectedItem().equals("Secretaire") && categorie.equals("Secretaire")){
+                            JOptionPane.showMessageDialog(this, "Bienvenue ");
+                            GestionDePatients s=new GestionDePatients();
+                            s.setVisible(true);
+                            this.setVisible(false);
+                        }
+                        else if(jcomboCategorie.getSelectedItem().equals("Admin") && categorie.equals("Infirmière")){
+                            JOptionPane.showMessageDialog(this, "Bienvenue ");
+                            GestionPersonnels i=new GestionPersonnels();
+                            i.setVisible(true);
+                            this.setVisible(false);
+                        }
+                        else if(jcomboCategorie.getSelectedItem().equals("Admin") && categorie.equals("Admin")){
+                            JOptionPane.showMessageDialog(this, "Bienvenue ");
+                            GestionPersonnels i=new GestionPersonnels();
+                            i.setVisible(true);
+                            this.setVisible(false);
+                        }
+                        else if(jcomboCategorie.getSelectedItem().equals("Caissiere") && categorie.equals("Caissiere")){
+                            JOptionPane.showMessageDialog(this, "Bienvenue ");
+                            Facture i=new Facture();
+                            i.setVisible(true);
+                            this.setVisible(false);
+                        }
+                        else
+                            JOptionPane.showMessageDialog(this, "Mauvaise categorie selectionnée");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Désolé, le nom d'utilisateur et/ou mot de passe incorrect(s)");
+                        jtfUsername.setText("");
+                        jpassword.setText("");
+                    }
+                }
+            }catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+            
     }//GEN-LAST:event_jbtnValiderActionPerformed
 
     private void jbtnAnnulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAnnulerActionPerformed
-        // TODO add your handling code here:
+        jtfUsername.setText("");
+        jpassword.setText("");
     }//GEN-LAST:event_jbtnAnnulerActionPerformed
 
     private void jcomboCategorieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcomboCategorieActionPerformed

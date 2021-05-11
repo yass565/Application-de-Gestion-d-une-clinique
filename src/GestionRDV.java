@@ -5,6 +5,22 @@
  */
 package gestion.de.clinique;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
 /**
  *
  * @author hp
@@ -14,8 +30,18 @@ public class GestionRDV extends javax.swing.JFrame {
     /**
      * Creates new form GestionRDV
      */
+    DefaultTableModel model = new DefaultTableModel();
     public GestionRDV() {
         initComponents();
+        model.addColumn("idR");
+        model.addColumn("nom");
+        model.addColumn("prenom");
+        model.addColumn("dateRDV");
+        model.addColumn("Heure");
+        model.addColumn("Motif");
+        model.addColumn("Id_Medecin");
+        
+        afficher();
     }
 
     /**
@@ -28,119 +54,419 @@ public class GestionRDV extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        jlblPrenom = new javax.swing.JLabel();
+        jlblDate = new javax.swing.JLabel();
+        jlblHeure = new javax.swing.JLabel();
+        jlblMotif = new javax.swing.JLabel();
+        jtfNom = new javax.swing.JTextField();
+        jbtnRechercher = new javax.swing.JButton();
+        jtfId = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        jtaMotif = new javax.swing.JTextArea();
+        jbtnAjouter = new javax.swing.JButton();
+        jbtnModifier = new javax.swing.JButton();
+        jbtnSupprimer = new javax.swing.JButton();
+        jbtnActualiser = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jtabRDV = new javax.swing.JTable();
+        jXDatePicker1 = new org.jdesktop.swingx.JXDatePicker();
+        toolBar = new javax.swing.JToolBar();
+        tbtnRDV = new javax.swing.JButton();
+        tbtnPatient = new javax.swing.JButton();
+        jftHeure = new javax.swing.JFormattedTextField();
+        jcomboMedecin = new javax.swing.JComboBox<>();
+        jlblMedecin = new javax.swing.JLabel();
+        jtfPrenom = new javax.swing.JTextField();
+        jlblNom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gestion des Rendez-Vous");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 51, 204));
         jLabel1.setText("Gestion des Rendez-Vous");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 40, 410, 40));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 410, 40));
 
-        jLabel2.setText("Patient");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
+        jlblPrenom.setText("Prenom");
+        getContentPane().add(jlblPrenom, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, -1, 20));
 
-        jLabel3.setText("Date");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
+        jlblDate.setText("Date");
+        getContentPane().add(jlblDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, -1, -1));
 
-        jLabel4.setText("Heure");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, -1, -1));
+        jlblHeure.setText("Heure");
+        getContentPane().add(jlblHeure, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
 
-        jLabel5.setText("Commentaire");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, -1));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 166, -1));
+        jlblMotif.setText("Motif");
+        getContentPane().add(jlblMotif, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 150, -1, -1));
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jtfNom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                jtfNomActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 120, 166, -1));
-        getContentPane().add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, 166, -1));
-        getContentPane().add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 450, 150, 30));
+        getContentPane().add(jtfNom, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, 140, -1));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 270, 130));
-
-        jButton1.setText("Ajouter");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jbtnRechercher.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnRechercher.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/rechercher.png"))); // NOI18N
+        jbtnRechercher.setText("Rechercher");
+        jbtnRechercher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jbtnRechercherActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 400, 100, 30));
+        getContentPane().add(jbtnRechercher, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 400, 140, 40));
+        getContentPane().add(jtfId, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 400, 150, 40));
 
-        jButton3.setText("Modifier");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 100, 30));
+        jtaMotif.setColumns(20);
+        jtaMotif.setRows(5);
+        jScrollPane1.setViewportView(jtaMotif);
 
-        jButton4.setText("Supprimer");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 130, 210, 120));
+
+        jbtnAjouter.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnAjouter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/ajouter-icône.jpg"))); // NOI18N
+        jbtnAjouter.setText("Ajouter");
+        jbtnAjouter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jbtnAjouterActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 460, 100, 30));
+        getContentPane().add(jbtnAjouter, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 280, 140, 40));
 
-        jButton6.setText("Fermer");
-        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, 110, 30));
+        jbtnModifier.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnModifier.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/modier.jpg"))); // NOI18N
+        jbtnModifier.setText("Modifier");
+        jbtnModifier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnModifierActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbtnModifier, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 280, 140, 40));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jbtnSupprimer.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnSupprimer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/supprimer.png"))); // NOI18N
+        jbtnSupprimer.setText("Supprimer");
+        jbtnSupprimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnSupprimerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbtnSupprimer, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 340, 140, 40));
+
+        jbtnActualiser.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jbtnActualiser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/actualiser.png"))); // NOI18N
+        jbtnActualiser.setText("Actualiser");
+        jbtnActualiser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnActualiserActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbtnActualiser, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 340, 140, 40));
+
+        jtabRDV.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Date de RDV", "Num Patient", "Heure", "Commentaire", "Status"
+                "Id RDV", "Nom Patient", "Prenom", "DateRDV", "Heure", "Motif", "Medecin"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jtabRDV.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtabRDVMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jtabRDV);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 120, 470, 290));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, 770, 130));
 
-        jLabel7.setText("Rechercher");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(474, 460, 60, 20));
+        jXDatePicker1.setFormats(new String[]{"yyyy-MM-dd"});
+        jXDatePicker1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jXDatePicker1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jXDatePicker1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 140, -1));
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/rendezVous.jpg"))); // NOI18N
-        jLabel6.setText("jLabel6");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 859, 520));
+        toolBar.setRollover(true);
+        toolBar.setName("Rendez-vous"); // NOI18N
+
+        tbtnRDV.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tbtnRDV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/calendrier (1).jpg"))); // NOI18N
+        tbtnRDV.setText("Gestion des Rendez-vous");
+        tbtnRDV.setFocusable(false);
+        tbtnRDV.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tbtnRDV.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        tbtnRDV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbtnRDVActionPerformed(evt);
+            }
+        });
+        toolBar.add(tbtnRDV);
+
+        tbtnPatient.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tbtnPatient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestion/de/clinique/icon/patient.png"))); // NOI18N
+        tbtnPatient.setText("Gestion des Patients");
+        tbtnPatient.setFocusable(false);
+        tbtnPatient.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tbtnPatient.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        tbtnPatient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbtnPatientActionPerformed(evt);
+            }
+        });
+        toolBar.add(tbtnPatient);
+
+        getContentPane().add(toolBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 60));
+
+        jftHeure.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance())));
+        getContentPane().add(jftHeure, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, 140, -1));
+
+        try{
+            String fonction="Medecin";
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT idM FROM personnels where fonction='"+fonction+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                jcomboMedecin.addItem(rs.getString("idM"));
+            }
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        jcomboMedecin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcomboMedecinActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jcomboMedecin, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 140, -1));
+
+        jlblMedecin.setText("Medecin");
+        getContentPane().add(jlblMedecin, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, -1, -1));
+        getContentPane().add(jtfPrenom, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 140, -1));
+
+        jlblNom.setText("Nom");
+        getContentPane().add(jlblNom, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 40, 20));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void deplace(int i){
+        try{
+            jtfId.setText(model.getValueAt(i, 0).toString());
+            jtfNom.setText(model.getValueAt(i, 1).toString());
+            jtfPrenom.setText(model.getValueAt(i, 2).toString());
+            jXDatePicker1.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(model.getValueAt(i, 3).toString()));
+            jftHeure.setText(model.getValueAt(i, 4).toString());
+            jtaMotif.setText(model.getValueAt(i, 5).toString());
+            jcomboMedecin.setSelectedItem(model.getValueAt(i, 6).toString());
+            
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+    }
+    
+    private void afficher(){
+    try {
+        model.setRowCount(0);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT * FROM rendezvous;";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String id = rs.getString("idR");
+                String idM=rs.getString("id_Medecin");
+                String nom = rs.getString("nom");
+                String prenom=rs.getString("prenom");
+                String date=rs.getString("DateRDV");
+                String heure=rs.getString("heure");
+                String motif=rs.getString("motif");
+                
+                
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+                model.addRow (new Object[] {id,nom,prenom, date, heure, motif, idM});
+            }
+            jtabRDV.setModel(model);
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    }
+    catch (SQLException e)
+        {
+            
+        }
+
+    }
+    private void jbtnAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAjouterActionPerformed
+        String id=jtfId.getText();
+        String idM=jcomboMedecin.getSelectedItem().toString();
+        String nom=jtfNom.getText();
+        String prenom=jtfPrenom.getText();
+        String date= new SimpleDateFormat("yyyyy-mm-dd").format(jXDatePicker1.getDate());
+        String heure=jftHeure.getText();
+        String motif=jtaMotif.getText();
+            
+            
+    
+        if(id.isEmpty()||prenom.isEmpty()||nom.isEmpty()||date.isEmpty()||heure.isEmpty()||motif.isEmpty()||idM.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this,"Veuillez remplir tous les champs");
+            
+        }
+        else
+        {
+            try
+            {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                Statement stmt=(Statement)conn.createStatement();   
+                String query="Insert Into rendezvous values ('"+id+"','"+idM+"','"+nom+"','"+prenom+"','"+date+"','"+heure+"', '"+motif+"');";
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(this,"Rendez-Vous enregistré");                            
+
+            }
+            catch( SQLException e)
+            {
+                JOptionPane.showMessageDialog(this,e.getMessage());
+            }
+        }
+        afficher();
+    }//GEN-LAST:event_jbtnAjouterActionPerformed
+
+    private void jbtnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSupprimerActionPerformed
+       String supprimer;
+        String Id="";
+        supprimer=jtfId.getText();
+        if(supprimer.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Veuillez saisir l id du patient à supprimer");
+           jtfId.setText("saisisser l id ici");
+        }
+        else{
+            try
+            {
+        	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+        	Statement stmt=(Statement) conn.createStatement();
+        	String query="select idR from rendezvous where idR='"+supprimer+"';";
+                ResultSet rs=stmt.executeQuery(query);            
+                while(rs.next())
+                {
+                    Id=rs.getString("idR");
+                }
+                
+                if(supprimer.equals(Id))
+                {
+                    try
+                    {
+                    	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                    	Statement stmt1=(Statement)con.createStatement();   
+			String query1="delete from rendezvous where idR='"+supprimer+"';";
+		        stmt1.executeUpdate(query1);
+                        JOptionPane.showMessageDialog(this,"Rendez-vous supprimé");	                                
+		    }
+                    catch(SQLException e)
+                    {
+                        JOptionPane.showMessageDialog(this,e.getMessage());
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Aucun rendez vous n'a cet Id pas dans la base");
+                }
+            }
+            catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+        afficher();
+    }//GEN-LAST:event_jbtnSupprimerActionPerformed
+
+    private void jXDatePicker1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jXDatePicker1ActionPerformed
+       
+    }//GEN-LAST:event_jXDatePicker1ActionPerformed
+
+    private void tbtnRDVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnRDVActionPerformed
+        new GestionRDV().setVisible(true);
+    }//GEN-LAST:event_tbtnRDVActionPerformed
+
+    private void tbtnPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnPatientActionPerformed
+        new GestionDePatients().setVisible(true);
+    }//GEN-LAST:event_tbtnPatientActionPerformed
+
+    private void jtfNomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfNomActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jtfNomActionPerformed
+
+    private void jbtnActualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnActualiserActionPerformed
+        afficher();
+    }//GEN-LAST:event_jbtnActualiserActionPerformed
+
+    private void jbtnModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModifierActionPerformed
+        if(jtfId.getText().isEmpty()){
+           JOptionPane.showMessageDialog(null, "Veuiller selectionner dans le tableau la ligne du patient à modifier");
+       }
+       else{
+           try { 
+            if (JOptionPane.showConfirmDialog (null,"confirmer la modification","modification",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+                Statement stmt = (Statement) conn.createStatement();
+                String query="UPDATE rendezvous SET id_Medecin='"+jcomboMedecin.getSelectedItem().toString()+"', Nom='"+jtfNom.getText()+"',Prenom='"+jtfPrenom.getText()+"', dateRDV='"+new SimpleDateFormat("yyyyy-mm-dd").format(jXDatePicker1.getDate())+"', Heure='"+jftHeure.getText()+"', Motif='"+jtaMotif.getText()+"' WHERE idR= "+jtfId.getText()+";";
+                stmt.executeUpdate(query);
+                afficher();          
+            } 
+        } catch (HeadlessException | SQLException e){JOptionPane.showMessageDialog(null,"erreur de modification!"+e.getMessage());
+        }
+       }
+    }//GEN-LAST:event_jbtnModifierActionPerformed
+
+    private void jbtnRechercherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRechercherActionPerformed
+        try{
+           model.setRowCount(0);
+           Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3308/pi?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC","root", "");
+            Statement stmt = (Statement) conn.createStatement();
+            String query="SELECT * FROM rendezvous WHERE idR='"+jtfId.getText()+"';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                String id = rs.getString("idR");
+                String idM=rs.getString("id_Medecin");
+                String nom = rs.getString("nom");
+                String prenom=rs.getString("prenom");
+                String date=rs.getString("dateRDV");
+                String heure=rs.getString("Heure");
+                String motif=rs.getString("Motif");
+                
+                model.addRow (new Object[] {id,nom,prenom, date, heure, motif, idM});
+            }
+            jtabRDV.setModel(model);
+            if(model.getRowCount()==0)
+                JOptionPane.showMessageDialog(null, "Il n'y a aucun rendez-Vous enregistré à ce numero");
+            else{
+                int i=0;
+                deplace(i);
+            }
+           
+       }
+       catch(HeadlessException | SQLException e){
+           JOptionPane.showMessageDialog(null,e.getMessage());
+       }
+    }//GEN-LAST:event_jbtnRechercherActionPerformed
+
+    private void jtabRDVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtabRDVMouseClicked
+        try{
+            int i=jtabRDV.getSelectedRow();
+            deplace(i);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "erreur de deplacement");
+        }
+    }//GEN-LAST:event_jtabRDVMouseClicked
+
+    private void jcomboMedecinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcomboMedecinActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcomboMedecinActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,24 +504,30 @@ public class GestionRDV extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private org.jdesktop.swingx.JXDatePicker jXDatePicker1;
+    private javax.swing.JButton jbtnActualiser;
+    private javax.swing.JButton jbtnAjouter;
+    private javax.swing.JButton jbtnModifier;
+    private javax.swing.JButton jbtnRechercher;
+    private javax.swing.JButton jbtnSupprimer;
+    private javax.swing.JComboBox<String> jcomboMedecin;
+    private javax.swing.JFormattedTextField jftHeure;
+    private javax.swing.JLabel jlblDate;
+    private javax.swing.JLabel jlblHeure;
+    private javax.swing.JLabel jlblMedecin;
+    private javax.swing.JLabel jlblMotif;
+    private javax.swing.JLabel jlblNom;
+    private javax.swing.JLabel jlblPrenom;
+    private javax.swing.JTextArea jtaMotif;
+    private javax.swing.JTable jtabRDV;
+    private javax.swing.JTextField jtfId;
+    private javax.swing.JTextField jtfNom;
+    private javax.swing.JTextField jtfPrenom;
+    private javax.swing.JButton tbtnPatient;
+    private javax.swing.JButton tbtnRDV;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 }
